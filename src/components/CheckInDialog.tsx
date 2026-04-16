@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useId } from 'react';
+import { useState, useId } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -29,10 +29,6 @@ export function CheckInDialog({ open, dayNumber, onSubmit, onClose }: Props) {
   const fruitsId = useId();
   const veggiesId = useId();
   const fiberId = useId();
-
-  useEffect(() => {
-    if (!open) setToggles({ fruits: false, veggies: false, fiberSpice: false });
-  }, [open]);
 
   const allOn = toggles.fruits && toggles.veggies && toggles.fiberSpice;
 

@@ -17,10 +17,13 @@ export type TrackerState = {
   days: DayState[];
   rewardUnlocked: boolean;
   rewardClaimedAt: string | null;
+  rewardDismissed: boolean;
 
   toggleItem: (day: number, item: HabitItem) => void;
   setDayItems: (day: number, values: { fruits: boolean; veggies: boolean; fiberSpice: boolean }) => void;
   submitDay: (day: number) => void;
+  dismissReward: () => void;
+  showReward: () => void;
   reset: () => void;
 };
 
@@ -41,6 +44,7 @@ export const useTrackerStore = create<TrackerState>()(
       days: createInitialDays(),
       rewardUnlocked: false,
       rewardClaimedAt: null,
+      rewardDismissed: false,
 
       toggleItem: (day, item) =>
         set((state) => ({
@@ -69,20 +73,26 @@ export const useTrackerStore = create<TrackerState>()(
           );
           const completedCount = nextDays.filter((d) => d.completed).length;
           const nextRewardUnlocked = completedCount >= TOTAL_DAYS;
+          const justUnlocked = nextRewardUnlocked && !state.rewardUnlocked;
 
           return {
             days: nextDays,
             rewardUnlocked: nextRewardUnlocked,
             rewardClaimedAt:
               nextRewardUnlocked && !state.rewardClaimedAt ? nowIso : state.rewardClaimedAt,
+            rewardDismissed: justUnlocked ? false : state.rewardDismissed,
           };
         }),
+
+      dismissReward: () => set({ rewardDismissed: true }),
+      showReward: () => set({ rewardDismissed: false }),
 
       reset: () =>
         set({
           days: createInitialDays(),
           rewardUnlocked: false,
           rewardClaimedAt: null,
+          rewardDismissed: false,
         }),
     }),
     { name: STORAGE_KEY }

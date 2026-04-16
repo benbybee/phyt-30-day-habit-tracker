@@ -14,22 +14,24 @@ import { CATEGORY_COLORS } from '@/lib/config';
 export default function TrackerPage() {
   const days = useTrackerStore((s) => s.days);
   const rewardUnlocked = useTrackerStore((s) => s.rewardUnlocked);
+  const rewardDismissed = useTrackerStore((s) => s.rewardDismissed);
   const setDayItems = useTrackerStore((s) => s.setDayItems);
   const submitDay = useTrackerStore((s) => s.submitDay);
+  const dismissReward = useTrackerStore((s) => s.dismissReward);
+  const showReward = useTrackerStore((s) => s.showReward);
   const reset = useTrackerStore((s) => s.reset);
 
   const [openDay, setOpenDay] = useState<number | null>(null);
-  const [rewardOpen, setRewardOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
+    // Mark hydrated once the client has mounted so we can safely read persisted state
+    // without causing an SSR hydration mismatch.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setHydrated(true);
   }, []);
 
-  useEffect(() => {
-    if (rewardUnlocked) setRewardOpen(true);
-  }, [rewardUnlocked]);
-
+  const rewardOpen = hydrated && rewardUnlocked && !rewardDismissed;
   const completed = countCompleted(days);
 
   const handleSubmit = (toggles: { fruits: boolean; veggies: boolean; fiberSpice: boolean }) => {
@@ -39,20 +41,15 @@ export default function TrackerPage() {
     setOpenDay(null);
   };
 
-  const handleReset = () => {
-    reset();
-    setRewardOpen(false);
-  };
-
   return (
     <main className="max-w-3xl mx-auto p-6">
       <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
         <h1 className="text-3xl font-semibold">Join the Phyt</h1>
         <div className="flex gap-2">
-          {hydrated && rewardUnlocked && !rewardOpen && (
-            <Button onClick={() => setRewardOpen(true)}>Your reward is ready →</Button>
+          {hydrated && rewardUnlocked && rewardDismissed && (
+            <Button onClick={showReward}>Your reward is ready →</Button>
           )}
-          <Button variant="outline" size="sm" onClick={handleReset}>
+          <Button variant="outline" size="sm" onClick={reset}>
             Reset demo
           </Button>
         </div>
@@ -77,13 +74,14 @@ export default function TrackerPage() {
       </div>
 
       <CheckInDialog
+        key={openDay ?? 'closed'}
         open={openDay !== null}
         dayNumber={openDay ?? 0}
         onSubmit={handleSubmit}
         onClose={() => setOpenDay(null)}
       />
 
-      <RewardReveal open={rewardOpen} onClose={() => setRewardOpen(false)} />
+      <RewardReveal open={rewardOpen} onClose={dismissReward} />
       <Toaster />
     </main>
   );
