@@ -19,6 +19,7 @@ export type TrackerState = {
   rewardClaimedAt: string | null;
 
   toggleItem: (day: number, item: HabitItem) => void;
+  setDayItems: (day: number, values: { fruits: boolean; veggies: boolean; fiberSpice: boolean }) => void;
   submitDay: (day: number) => void;
   reset: () => void;
 };
@@ -45,6 +46,13 @@ export const useTrackerStore = create<TrackerState>()(
         set((state) => ({
           days: state.days.map((d) =>
             d.dayNumber === day && !d.completed ? { ...d, [item]: !d[item] } : d
+          ),
+        })),
+
+      setDayItems: (day, values) =>
+        set((state) => ({
+          days: state.days.map((d) =>
+            d.dayNumber === day && !d.completed ? { ...d, ...values } : d
           ),
         })),
 
