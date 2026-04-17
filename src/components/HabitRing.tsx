@@ -25,11 +25,10 @@ export function HabitRing({ days, onSegmentClick }: Props) {
 
   return (
     <svg
-      viewBox={`0 0 ${SIZE} ${SIZE}`}
-      width="100%"
-      height="auto"
+      viewBox="0 0 520 395"
       role="img"
       aria-label="30 day habit tracker"
+      className="block w-full h-auto"
     >
       {segs.map(([start, end], i) => {
         const day = days[i];
