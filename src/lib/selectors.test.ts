@@ -8,6 +8,7 @@ function mkDays(completed: number[]): DayState[] {
     fruits: completed.includes(i + 1),
     veggies: completed.includes(i + 1),
     fiberSpice: completed.includes(i + 1),
+    other: false,
     completed: completed.includes(i + 1),
     completedAt: completed.includes(i + 1) ? '2026-04-16' : null,
   }));

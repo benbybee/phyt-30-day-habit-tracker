@@ -6,6 +6,7 @@ export const CATEGORY_COLORS = {
   fruits: '#c0392b',
   veggies: '#3aa856',
   fiberSpice: '#3B48AA',
+  other: '#e67e22',
 } as const;
 
 export const STORAGE_KEY = 'phyt-tracker-v1';

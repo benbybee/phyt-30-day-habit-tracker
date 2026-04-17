@@ -6,8 +6,10 @@ describe('tracker store', () => {
     localStorage.clear();
     useTrackerStore.setState({
       days: createInitialDays(),
+      otherLabel: 'Other',
       rewardUnlocked: false,
       rewardClaimedAt: null,
+      rewardDismissed: false,
     });
   });
 
@@ -45,6 +47,17 @@ describe('tracker store', () => {
     const day3 = useTrackerStore.getState().days[2];
     expect(day3.fruits).toBe(true);
   });
+
+  it('toggleItem works for the "other" item', () => {
+    useTrackerStore.getState().toggleItem(7, 'other');
+    const day7 = useTrackerStore.getState().days[6];
+    expect(day7.other).toBe(true);
+  });
+
+  it('setOtherLabel updates the custom habit label', () => {
+    useTrackerStore.getState().setOtherLabel('Water');
+    expect(useTrackerStore.getState().otherLabel).toBe('Water');
+  });
 });
 
 describe('submitDay', () => {
@@ -52,8 +65,10 @@ describe('submitDay', () => {
     localStorage.clear();
     useTrackerStore.setState({
       days: createInitialDays(),
+      otherLabel: 'Other',
       rewardUnlocked: false,
       rewardClaimedAt: null,
+      rewardDismissed: false,
     });
   });
 
@@ -69,6 +84,12 @@ describe('submitDay', () => {
     const day1 = useTrackerStore.getState().days[0];
     expect(day1.completed).toBe(true);
     expect(day1.completedAt).not.toBeNull();
+  });
+
+  it('marks completed when only "other" is toggled', () => {
+    useTrackerStore.getState().toggleItem(4, 'other');
+    useTrackerStore.getState().submitDay(4);
+    expect(useTrackerStore.getState().days[3].completed).toBe(true);
   });
 
   it('marks completed when all 3 are toggled', () => {

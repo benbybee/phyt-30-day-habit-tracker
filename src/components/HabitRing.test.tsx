@@ -4,12 +4,12 @@ import { HabitRing } from './HabitRing';
 import { createInitialDays } from '@/lib/state';
 
 describe('HabitRing', () => {
-  it('renders 30 segments × 3 bands = 90 path elements', () => {
+  it('renders 30 segments × 4 bands = 120 path elements', () => {
     const { container } = render(
       <HabitRing days={createInitialDays()} onSegmentClick={() => {}} />
     );
     const paths = container.querySelectorAll('path[data-band]');
-    expect(paths.length).toBe(90);
+    expect(paths.length).toBe(120);
   });
 
   it('renders day number labels 1..30', () => {

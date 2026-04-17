@@ -13,9 +13,11 @@ import { CATEGORY_COLORS } from '@/lib/config';
 
 export default function TrackerPage() {
   const days = useTrackerStore((s) => s.days);
+  const otherLabel = useTrackerStore((s) => s.otherLabel);
   const rewardUnlocked = useTrackerStore((s) => s.rewardUnlocked);
   const rewardDismissed = useTrackerStore((s) => s.rewardDismissed);
   const setDayItems = useTrackerStore((s) => s.setDayItems);
+  const setOtherLabel = useTrackerStore((s) => s.setOtherLabel);
   const submitDay = useTrackerStore((s) => s.submitDay);
   const dismissReward = useTrackerStore((s) => s.dismissReward);
   const showReward = useTrackerStore((s) => s.showReward);
@@ -34,7 +36,12 @@ export default function TrackerPage() {
   const rewardOpen = hydrated && rewardUnlocked && !rewardDismissed;
   const completed = countCompleted(days);
 
-  const handleSubmit = (toggles: { fruits: boolean; veggies: boolean; fiberSpice: boolean }) => {
+  const handleSubmit = (toggles: {
+    fruits: boolean;
+    veggies: boolean;
+    fiberSpice: boolean;
+    other: boolean;
+  }) => {
     if (openDay === null) return;
     setDayItems(openDay, toggles);
     submitDay(openDay);
@@ -71,12 +78,28 @@ export default function TrackerPage() {
         <LegendSwatch color={CATEGORY_COLORS.fruits} label="Fruits" />
         <LegendSwatch color={CATEGORY_COLORS.veggies} label="Veggies" />
         <LegendSwatch color={CATEGORY_COLORS.fiberSpice} label="Fiber & Spice" />
+        <LegendSwatch color={CATEGORY_COLORS.other} label={otherLabel || 'Other'} />
+      </div>
+
+      <div className="flex justify-center mt-4">
+        <label className="flex items-center gap-2 text-sm text-muted-foreground">
+          <span>4th habit:</span>
+          <input
+            type="text"
+            value={hydrated ? otherLabel : 'Other'}
+            onChange={(e) => setOtherLabel(e.target.value)}
+            placeholder="e.g. Water, Exercise"
+            maxLength={30}
+            className="rounded border border-input bg-background px-2 py-1 text-sm w-48 outline-none focus:ring-2 focus:ring-ring"
+          />
+        </label>
       </div>
 
       <CheckInDialog
         key={openDay ?? 'closed'}
         open={openDay !== null}
         dayNumber={openDay ?? 0}
+        otherLabel={otherLabel}
         onSubmit={handleSubmit}
         onClose={() => setOpenDay(null)}
       />

@@ -9,11 +9,11 @@ const SIZE = 520;
 const CX = SIZE / 2;
 const CY = SIZE / 2;
 const OUTER_R = 230;
-const BAND_WIDTH = 28;
+const BAND_WIDTH = 24;
 const GAP = 4;
 const LABEL_R = OUTER_R + 18;
-// Inner ring radius = OUTER_R - 3*BAND_WIDTH - 2*GAP = 138. Leaf fits comfortably inside.
-const LEAF_SIZE = 170;
+// Inner ring radius = OUTER_R - 4*BAND_WIDTH - 3*GAP = 122. Leaf fits comfortably inside.
+const LEAF_SIZE = 140;
 
 type Props = {
   days: DayState[];
@@ -50,7 +50,7 @@ export function HabitRing({ days, onSegmentClick }: Props) {
             innerR: OUTER_R - 2 * BAND_WIDTH - GAP,
             filled: day.veggies,
             color: CATEGORY_COLORS.veggies,
-            delay: 0.12,
+            delay: 0.1,
           },
           {
             item: 'fiberSpice' as const,
@@ -58,7 +58,15 @@ export function HabitRing({ days, onSegmentClick }: Props) {
             innerR: OUTER_R - 3 * BAND_WIDTH - 2 * GAP,
             filled: day.fiberSpice,
             color: CATEGORY_COLORS.fiberSpice,
-            delay: 0.24,
+            delay: 0.2,
+          },
+          {
+            item: 'other' as const,
+            outerR: OUTER_R - 3 * BAND_WIDTH - 3 * GAP,
+            innerR: OUTER_R - 4 * BAND_WIDTH - 3 * GAP,
+            filled: day.other,
+            color: CATEGORY_COLORS.other,
+            delay: 0.3,
           },
         ];
 

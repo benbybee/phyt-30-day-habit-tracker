@@ -8,7 +8,13 @@ describe('CheckInDialog', () => {
     const user = userEvent.setup();
     const onSubmit = vi.fn();
     render(
-      <CheckInDialog open dayNumber={1} onSubmit={onSubmit} onClose={() => {}} />
+      <CheckInDialog
+        open
+        dayNumber={1}
+        otherLabel="Other"
+        onSubmit={onSubmit}
+        onClose={() => {}}
+      />
     );
 
     const submit = screen.getByRole('button', { name: /log day 1/i });
@@ -22,7 +28,13 @@ describe('CheckInDialog', () => {
     const user = userEvent.setup();
     const onSubmit = vi.fn();
     render(
-      <CheckInDialog open dayNumber={1} onSubmit={onSubmit} onClose={() => {}} />
+      <CheckInDialog
+        open
+        dayNumber={1}
+        otherLabel="Other"
+        onSubmit={onSubmit}
+        onClose={() => {}}
+      />
     );
     await user.click(screen.getByRole('switch', { name: /veggies/i }));
     await user.click(screen.getByRole('button', { name: /log day 1/i }));
@@ -30,23 +42,56 @@ describe('CheckInDialog', () => {
       fruits: false,
       veggies: true,
       fiberSpice: false,
+      other: false,
     });
   });
 
-  it('submits with all 3 on', async () => {
+  it('renders a switch for the custom "other" label', async () => {
     const user = userEvent.setup();
     const onSubmit = vi.fn();
     render(
-      <CheckInDialog open dayNumber={1} onSubmit={onSubmit} onClose={() => {}} />
+      <CheckInDialog
+        open
+        dayNumber={1}
+        otherLabel="Water"
+        onSubmit={onSubmit}
+        onClose={() => {}}
+      />
+    );
+
+    const waterSwitch = screen.getByRole('switch', { name: /water/i });
+    await user.click(waterSwitch);
+    await user.click(screen.getByRole('button', { name: /log day 1/i }));
+    expect(onSubmit).toHaveBeenCalledWith({
+      fruits: false,
+      veggies: false,
+      fiberSpice: false,
+      other: true,
+    });
+  });
+
+  it('submits with all 4 on', async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn();
+    render(
+      <CheckInDialog
+        open
+        dayNumber={1}
+        otherLabel="Other"
+        onSubmit={onSubmit}
+        onClose={() => {}}
+      />
     );
     await user.click(screen.getByRole('switch', { name: /fruits/i }));
     await user.click(screen.getByRole('switch', { name: /veggies/i }));
     await user.click(screen.getByRole('switch', { name: /fiber/i }));
+    await user.click(screen.getByRole('switch', { name: /other/i }));
     await user.click(screen.getByRole('button', { name: /log day 1/i }));
     expect(onSubmit).toHaveBeenCalledWith({
       fruits: true,
       veggies: true,
       fiberSpice: true,
+      other: true,
     });
   });
 });
