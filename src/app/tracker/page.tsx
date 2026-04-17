@@ -57,7 +57,7 @@ export default function TrackerPage() {
 
       <ProgressStats completedCount={hydrated ? completed : 0} />
 
-      <div className="my-6 max-w-[1000px] mx-auto">
+      <div className="my-6 mx-auto" style={{ width: 900, maxWidth: '100%' }}>
         <HabitRing days={days} onSegmentClick={setOpenDay} />
       </div>
 
