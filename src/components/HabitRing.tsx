@@ -12,6 +12,8 @@ const OUTER_R = 230;
 const BAND_WIDTH = 28;
 const GAP = 4;
 const LABEL_R = OUTER_R + 18;
+// Inner ring radius = OUTER_R - 3*BAND_WIDTH - 2*GAP = 138. Leaf fits comfortably inside.
+const LEAF_SIZE = 170;
 
 type Props = {
   days: DayState[];
@@ -68,10 +70,7 @@ export function HabitRing({ days, onSegmentClick }: Props) {
             style={{ cursor: day.completed ? 'default' : 'pointer' }}
             data-day={day.dayNumber}
           >
-            <title>
-              Day {day.dayNumber}
-              {day.completed ? ' — complete' : ''}
-            </title>
+            <title>{`Day ${day.dayNumber}${day.completed ? ' — complete' : ''}`}</title>
             {bands.map((b) => (
               <motion.path
                 key={b.item}
@@ -105,9 +104,14 @@ export function HabitRing({ days, onSegmentClick }: Props) {
           </g>
         );
       })}
-      <text x={CX} y={CY} fontSize={36} textAnchor="middle" dominantBaseline="middle">
-        🌿
-      </text>
+      <image
+        href="/BoN_Leaf-01.png"
+        x={CX - LEAF_SIZE / 2}
+        y={CY - LEAF_SIZE / 2}
+        width={LEAF_SIZE}
+        height={LEAF_SIZE}
+        preserveAspectRatio="xMidYMid meet"
+      />
     </svg>
   );
 }

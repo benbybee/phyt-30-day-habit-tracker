@@ -57,22 +57,27 @@ describe('submitDay', () => {
     });
   });
 
-  it('requires all 3 items to be toggled on', () => {
-    useTrackerStore.getState().toggleItem(1, 'fruits');
-    useTrackerStore.getState().toggleItem(1, 'veggies');
+  it('requires at least 1 item to be toggled on', () => {
     useTrackerStore.getState().submitDay(1);
     const day1 = useTrackerStore.getState().days[0];
     expect(day1.completed).toBe(false);
   });
 
-  it('marks completed when all 3 are toggled', () => {
+  it('marks completed when any 1 item is toggled', () => {
     useTrackerStore.getState().toggleItem(1, 'fruits');
-    useTrackerStore.getState().toggleItem(1, 'veggies');
-    useTrackerStore.getState().toggleItem(1, 'fiberSpice');
     useTrackerStore.getState().submitDay(1);
     const day1 = useTrackerStore.getState().days[0];
     expect(day1.completed).toBe(true);
     expect(day1.completedAt).not.toBeNull();
+  });
+
+  it('marks completed when all 3 are toggled', () => {
+    useTrackerStore.getState().toggleItem(2, 'fruits');
+    useTrackerStore.getState().toggleItem(2, 'veggies');
+    useTrackerStore.getState().toggleItem(2, 'fiberSpice');
+    useTrackerStore.getState().submitDay(2);
+    const day2 = useTrackerStore.getState().days[1];
+    expect(day2.completed).toBe(true);
   });
 
   it('unlocks reward when all 30 days complete', () => {

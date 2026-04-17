@@ -65,7 +65,7 @@ export const useTrackerStore = create<TrackerState>()(
           const target = state.days.find((d) => d.dayNumber === day);
           if (!target) return state;
           if (target.completed) return state;
-          if (!(target.fruits && target.veggies && target.fiberSpice)) return state;
+          if (!(target.fruits || target.veggies || target.fiberSpice)) return state;
 
           const nowIso = new Date().toISOString();
           const nextDays = state.days.map((d) =>

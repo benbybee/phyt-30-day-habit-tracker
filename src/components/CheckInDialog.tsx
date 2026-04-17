@@ -30,7 +30,7 @@ export function CheckInDialog({ open, dayNumber, onSubmit, onClose }: Props) {
   const veggiesId = useId();
   const fiberId = useId();
 
-  const allOn = toggles.fruits && toggles.veggies && toggles.fiberSpice;
+  const anyOn = toggles.fruits || toggles.veggies || toggles.fiberSpice;
 
   const row = (key: keyof Toggles, label: string, id: string) => (
     <div className="flex items-center justify-between py-3 border-b last:border-0">
@@ -60,8 +60,8 @@ export function CheckInDialog({ open, dayNumber, onSubmit, onClose }: Props) {
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button disabled={!allOn} onClick={() => onSubmit(toggles)}>
-            Complete Day {dayNumber}
+          <Button disabled={!anyOn} onClick={() => onSubmit(toggles)}>
+            Log Day {dayNumber}
           </Button>
         </DialogFooter>
       </DialogContent>
