@@ -42,7 +42,7 @@ export default function TrackerPage() {
   };
 
   return (
-    <main className="max-w-3xl mx-auto p-6">
+    <main className="max-w-6xl mx-auto p-6">
       <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
         <h1 className="text-3xl font-semibold">Join the Phyt</h1>
         <div className="flex gap-2">
@@ -57,7 +57,7 @@ export default function TrackerPage() {
 
       <ProgressStats completedCount={hydrated ? completed : 0} />
 
-      <div className="my-6 max-w-[500px] mx-auto">
+      <div className="my-6 max-w-[1000px] mx-auto">
         <HabitRing days={days} onSegmentClick={setOpenDay} />
       </div>
 
