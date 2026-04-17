@@ -49,7 +49,12 @@ export default function TrackerPage() {
   };
 
   return (
-    <main className="max-w-6xl mx-auto p-6">
+    <main
+      className="max-w-6xl mx-auto my-8 p-8 rounded-2xl shadow-sm"
+      style={{
+        background: 'linear-gradient(135deg, #d7e4ee 0%, #a9c0d4 100%)',
+      }}
+    >
       <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
         <h1 className="text-3xl font-semibold">Join the Phyt</h1>
         <div className="flex gap-2">
