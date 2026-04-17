@@ -5,7 +5,7 @@ export const TOTAL_DAYS = 30;
 export const CATEGORY_COLORS = {
   fruits: '#c0392b',
   veggies: '#3aa856',
-  fiberSpice: '#6b4a9e',
+  fiberSpice: '#3B48AA',
 } as const;
 
 export const STORAGE_KEY = 'phyt-tracker-v1';
