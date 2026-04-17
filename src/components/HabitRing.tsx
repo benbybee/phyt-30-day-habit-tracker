@@ -13,7 +13,7 @@ const BAND_WIDTH = 24;
 const GAP = 4;
 const LABEL_R = OUTER_R + 18;
 // Inner ring radius = OUTER_R - 4*BAND_WIDTH - 3*GAP = 122. Leaf fits comfortably inside.
-const LEAF_SIZE = 140;
+const LEAF_SIZE = 98;
 
 type Props = {
   days: DayState[];
