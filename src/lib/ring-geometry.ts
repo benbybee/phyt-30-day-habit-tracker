@@ -1,5 +1,7 @@
-const ARC_START = Math.PI * 0.85;
-const ARC_END = Math.PI * 2.15;
+// Gap on the LEFT side (west), arc covers top + right + bottom (270° arc, 90° gap).
+// Day 1 starts at ~10 o'clock (upper-left), Day 30 ends at ~8 o'clock (lower-left).
+const ARC_START = Math.PI * 1.25;
+const ARC_END = Math.PI * 2.75;
 
 export function segmentAngles(count: number): Array<[number, number]> {
   const total = ARC_END - ARC_START;

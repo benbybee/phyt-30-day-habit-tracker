@@ -25,7 +25,7 @@ export function HabitRing({ days, onSegmentClick }: Props) {
 
   return (
     <svg
-      viewBox="0 0 520 395"
+      viewBox="0 0 520 520"
       role="img"
       aria-label="30 day habit tracker"
       className="block w-full h-auto"
