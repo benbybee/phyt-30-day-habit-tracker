@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { HabitRing } from '@/components/HabitRing';
 import { CheckInDialog } from '@/components/CheckInDialog';
@@ -79,11 +80,15 @@ export default function TrackerPage() {
         </p>
       )}
 
-      <div className="flex gap-4 justify-center text-sm flex-wrap">
-        <LegendSwatch color={CATEGORY_COLORS.fruits} label="Fruits" />
-        <LegendSwatch color={CATEGORY_COLORS.veggies} label="Veggies" />
-        <LegendSwatch color={CATEGORY_COLORS.fiberSpice} label="Fiber & Spice" />
-        <LegendSwatch color={CATEGORY_COLORS.other} label={otherLabel || 'Other'} />
+      <div className="flex gap-6 justify-center items-center flex-wrap">
+        <LegendItem image="/1_Fruits.jpg" label="Fruits" color={CATEGORY_COLORS.fruits} />
+        <LegendItem image="/1_Veggies.jpg" label="Veggies" color={CATEGORY_COLORS.veggies} />
+        <LegendItem
+          image="/New_Balance_of_Nature_Fiber_and_Spice.png"
+          label="Fiber & Spice"
+          color={CATEGORY_COLORS.fiberSpice}
+        />
+        <LegendItem label={otherLabel || 'Other'} color={CATEGORY_COLORS.other} />
       </div>
 
       <div className="flex justify-center mt-4">
@@ -115,11 +120,34 @@ export default function TrackerPage() {
   );
 }
 
-function LegendSwatch({ color, label }: { color: string; label: string }) {
+function LegendItem({
+  image,
+  label,
+  color,
+}: {
+  image?: string;
+  label: string;
+  color: string;
+}) {
   return (
     <span className="flex items-center gap-2">
-      <span className="inline-block w-3 h-3 rounded-full" style={{ background: color }} />
-      {label}
+      {image ? (
+        <Image
+          src={image}
+          alt={label}
+          width={56}
+          height={56}
+          className="h-14 w-auto object-contain"
+        />
+      ) : (
+        <span
+          className="inline-block w-6 h-6 rounded-full"
+          style={{ background: color }}
+        />
+      )}
+      <span className="text-lg font-bold" style={{ color }}>
+        {label}
+      </span>
     </span>
   );
 }
