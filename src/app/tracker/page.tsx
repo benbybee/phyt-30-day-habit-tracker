@@ -52,7 +52,7 @@ export default function TrackerPage() {
     <main
       className="max-w-6xl mx-auto my-8 p-8 rounded-2xl shadow-sm"
       style={{
-        background: 'linear-gradient(180deg, #eef4f8 0%, #cfdce6 100%)',
+        background: 'linear-gradient(180deg, #7a9bbd 0%, #ffffff 100%)',
       }}
     >
       <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
