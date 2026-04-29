@@ -35,6 +35,7 @@ export type TrackerState = {
   dismissReward: () => void;
   showReward: () => void;
   reset: () => void;
+  fillAll: () => void;
 };
 
 export function createInitialDays(): DayState[] {
@@ -109,6 +110,33 @@ export const useTrackerStore = create<TrackerState>()(
           rewardClaimedAt: null,
           rewardDismissed: false,
         })),
+
+      fillAll: () =>
+        set((state) => {
+          const nowIso = new Date().toISOString();
+          const days = state.days.map((d) => {
+            let fruits = Math.random() > 0.25;
+            const veggies = Math.random() > 0.25;
+            const fiberSpice = Math.random() > 0.25;
+            const other = Math.random() > 0.25;
+            if (!(fruits || veggies || fiberSpice || other)) fruits = true;
+            return {
+              ...d,
+              fruits,
+              veggies,
+              fiberSpice,
+              other,
+              completed: true,
+              completedAt: nowIso,
+            };
+          });
+          return {
+            days,
+            rewardUnlocked: true,
+            rewardClaimedAt: state.rewardClaimedAt ?? nowIso,
+            rewardDismissed: false,
+          };
+        }),
     }),
     { name: STORAGE_KEY }
   )

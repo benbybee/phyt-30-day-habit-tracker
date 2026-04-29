@@ -101,8 +101,9 @@ export function HabitRing({ days, onSegmentClick }: Props) {
               data-label
               x={labelPos.x}
               y={labelPos.y}
-              fontSize={12}
-              fill="#374151"
+              fontSize={9}
+              fontWeight={500}
+              fill="#64748b"
               textAnchor="middle"
               dominantBaseline="middle"
             >

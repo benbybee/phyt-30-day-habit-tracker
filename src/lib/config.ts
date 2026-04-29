@@ -1,5 +1,5 @@
 export const DISCOUNT_CODE = 'PHYT30';
-export const DISCOUNT_URL = 'https://balanceofnature.com';
+export const DISCOUNT_URL = 'https://balanceofnature.com/shop';
 export const TOTAL_DAYS = 30;
 
 export const CATEGORY_COLORS = {
