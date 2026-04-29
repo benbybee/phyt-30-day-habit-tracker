@@ -51,13 +51,21 @@ export default function TrackerPage() {
 
   return (
     <main
-      className="max-w-6xl mx-auto my-8 p-8 rounded-2xl shadow-sm"
+      className="max-w-6xl mx-auto my-4 p-4 rounded-xl shadow-sm sm:my-8 sm:p-8 sm:rounded-2xl"
       style={{
         background: 'linear-gradient(180deg, #7a9bbd 0%, #ffffff 40%)',
       }}
     >
-      <header className="relative mb-8">
-        <div className="absolute right-0 top-0 flex items-center gap-3">
+      <header className="relative mb-6 sm:mb-8">
+        <div className="text-center pt-1">
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
+            Join the Phyt
+          </h1>
+          <p className="mt-1 text-xs sm:text-sm text-slate-600">
+            30-day wellness habit tracker
+          </p>
+        </div>
+        <div className="mt-3 flex flex-wrap items-center justify-center gap-3 sm:mt-0 sm:absolute sm:right-0 sm:top-0">
           {hydrated && rewardUnlocked && rewardDismissed && (
             <Button size="sm" onClick={showReward}>
               Your reward is ready →
@@ -75,10 +83,6 @@ export default function TrackerPage() {
           >
             Reset demo
           </button>
-        </div>
-        <div className="text-center pt-1">
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900">Join the Phyt</h1>
-          <p className="mt-1 text-sm text-slate-600">30-day wellness habit tracker</p>
         </div>
       </header>
 
@@ -146,12 +150,16 @@ function HabitProgressFooter({
   const c = CATEGORY_COLORS;
 
   return (
-    <div className="mx-auto mt-6 max-w-3xl rounded-2xl border border-slate-200 bg-white p-5">
-      <div className="flex items-center justify-between mb-4">
+    <div className="mx-auto mt-6 max-w-3xl rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
+      <div className="flex items-center justify-between mb-4 gap-2">
         <span className="text-sm font-semibold text-slate-700">Your 4 daily habits</span>
-        {showLock && <span className="text-[11px] text-slate-400">🔒 30 days to reward</span>}
+        {showLock && (
+          <span className="text-[11px] text-slate-400 whitespace-nowrap">
+            🔒 30 days to reward
+          </span>
+        )}
       </div>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-5 sm:gap-y-4">
         <RingHabit image={FRUITS_IMG} label="Fruits" color={c.fruits} count={counts.fruits} />
         <RingHabit image={VEGGIES_IMG} label="Veggies" color={c.veggies} count={counts.veggies} />
         <RingHabit
