@@ -88,7 +88,7 @@ export default function TrackerPage() {
 
       <ProgressStats completedCount={hydrated ? completed : 0} />
 
-      <div className="mt-4 mb-2 mx-auto" style={{ width: 900, maxWidth: '100%' }}>
+      <div className="mt-4 mb-2 mx-auto flex justify-center" style={{ width: 675, maxWidth: '100%' }}>
         <HabitRing days={days} onSegmentClick={setOpenDay} />
       </div>
 
@@ -150,8 +150,8 @@ function HabitProgressFooter({
   const c = CATEGORY_COLORS;
 
   return (
-    <div className="mx-auto mt-6 max-w-3xl rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
-      <div className="flex items-center justify-between mb-4 gap-2">
+    <div className="mx-auto mt-6 max-w-xl rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
+      <div className="flex items-center justify-between mb-3 gap-2">
         <span className="text-sm font-semibold text-slate-700">Your 4 daily habits</span>
         {showLock && (
           <span className="text-[11px] text-slate-400 whitespace-nowrap">
@@ -159,80 +159,51 @@ function HabitProgressFooter({
           </span>
         )}
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-5 sm:gap-y-4">
-        <RingHabit image={FRUITS_IMG} label="Fruits" color={c.fruits} count={counts.fruits} />
-        <RingHabit image={VEGGIES_IMG} label="Veggies" color={c.veggies} count={counts.veggies} />
-        <RingHabit
+      <div className="divide-y divide-slate-100">
+        <HabitRow image={FRUITS_IMG} label="Fruits" color={c.fruits} count={counts.fruits} />
+        <HabitRow image={VEGGIES_IMG} label="Veggies" color={c.veggies} count={counts.veggies} />
+        <HabitRow
           image={FIBER_IMG}
           label="Fiber & Spice"
           color={c.fiberSpice}
           count={counts.fiberSpice}
         />
-        <div className="flex flex-col items-center gap-2">
-          <ProgressRing color={c.other} pct={(counts.other / 30) * 100}>
-            <span className="w-10 h-10 rounded-full" style={{ background: c.other }} />
-          </ProgressRing>
-          <input
-            value={value}
-            onChange={(e) => setOtherLabel(e.target.value)}
-            placeholder="Other"
-            maxLength={30}
-            className="w-full text-center text-sm font-semibold bg-transparent outline-none border-b border-dashed border-slate-300 focus:border-current"
-            style={{ color: c.other }}
+        <div className="flex items-center gap-4 py-3">
+          <span
+            className="h-12 w-12 rounded-full shrink-0"
+            style={{ background: c.other }}
           />
-          <span className="text-xs text-slate-500">{counts.other}/30</span>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-baseline justify-between gap-3">
+              <input
+                value={value}
+                onChange={(e) => setOtherLabel(e.target.value)}
+                placeholder="Other"
+                maxLength={30}
+                className="font-semibold bg-transparent outline-none border-b border-dashed border-slate-300 focus:border-current min-w-0 flex-1"
+                style={{ color: c.other }}
+              />
+              <span className="text-sm font-semibold text-slate-700 tabular-nums shrink-0">
+                {Math.round((counts.other / 30) * 100)}%
+              </span>
+            </div>
+            <div className="mt-2 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-300"
+                style={{
+                  width: `${(counts.other / 30) * 100}%`,
+                  background: c.other,
+                }}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-function ProgressRing({
-  color,
-  pct,
-  size = 72,
-  stroke = 6,
-  children,
-}: {
-  color: string;
-  pct: number;
-  size?: number;
-  stroke?: number;
-  children?: React.ReactNode;
-}) {
-  const radius = (size - stroke) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference * (1 - Math.min(100, Math.max(0, pct)) / 100);
-  return (
-    <div className="relative" style={{ width: size, height: size }}>
-      <svg width={size} height={size} className="block">
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          stroke="#e5e7eb"
-          strokeWidth={stroke}
-          fill="none"
-        />
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          stroke={color}
-          strokeWidth={stroke}
-          fill="none"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          strokeLinecap="round"
-          transform={`rotate(-90 ${size / 2} ${size / 2})`}
-        />
-      </svg>
-      <div className="absolute inset-0 flex items-center justify-center">{children}</div>
-    </div>
-  );
-}
-
-function RingHabit({
+function HabitRow({
   image,
   label,
   color,
@@ -243,17 +214,33 @@ function RingHabit({
   color: string;
   count: number;
 }) {
-  const pct = (count / 30) * 100;
+  const pct = Math.round((count / 30) * 100);
   return (
-    <div className="flex flex-col items-center gap-2">
-      <ProgressRing color={color} pct={pct}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={image} alt={label} width={36} height={36} className="h-9 w-9 object-contain" />
-      </ProgressRing>
-      <span className="text-sm font-semibold text-center" style={{ color }}>
-        {label}
-      </span>
-      <span className="text-xs text-slate-500">{count}/30</span>
+    <div className="flex items-center gap-4 py-3">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={image}
+        alt={label}
+        width={48}
+        height={48}
+        className="h-12 w-12 object-contain shrink-0"
+      />
+      <div className="flex-1 min-w-0">
+        <div className="flex items-baseline justify-between gap-3">
+          <span className="font-semibold truncate" style={{ color }}>
+            {label}
+          </span>
+          <span className="text-sm font-semibold text-slate-700 tabular-nums shrink-0">
+            {pct}%
+          </span>
+        </div>
+        <div className="mt-2 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+          <div
+            className="h-full rounded-full transition-all duration-300"
+            style={{ width: `${pct}%`, background: color }}
+          />
+        </div>
+      </div>
     </div>
   );
 }
