@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -11,18 +11,21 @@ import {
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import { DISCOUNT_CODE, DISCOUNT_URL } from '@/lib/config';
+import { createClient } from '@/lib/supabase/browser';
 
 type Props = {
   open: boolean;
+  userId: string;
   onClose: () => void;
 };
 
 type View = 'reward' | 'feedback' | 'thanks';
 
-export function RewardReveal({ open, onClose }: Props) {
+export function RewardReveal({ open, userId, onClose }: Props) {
   const [view, setView] = useState<View>('reward');
   const [rating, setRating] = useState<number | null>(null);
   const [comments, setComments] = useState('');
+  const [submitting, startSubmit] = useTransition();
 
   useEffect(() => {
     if (!open) {
@@ -45,9 +48,21 @@ export function RewardReveal({ open, onClose }: Props) {
   };
 
   const submitFeedback = () => {
-    // Feedback payload would POST here in production.
-    // For now: rating={rating}, comments={comments}
-    setView('thanks');
+    if (rating === null) return;
+    startSubmit(async () => {
+      const supabase = createClient();
+      const { error } = await supabase.from('feedback_submissions').insert({
+        user_id: userId,
+        rating,
+        comments: comments.trim() || null,
+      });
+      if (error) {
+        toast.error('Could not submit feedback. Please try again.');
+        console.error('[feedback] insert failed', error);
+        return;
+      }
+      setView('thanks');
+    });
   };
 
   return (
@@ -149,15 +164,20 @@ export function RewardReveal({ open, onClose }: Props) {
             </div>
 
             <div className="flex gap-2 pt-1">
-              <Button variant="outline" onClick={() => setView('reward')} className="flex-1">
+              <Button
+                variant="outline"
+                onClick={() => setView('reward')}
+                className="flex-1"
+                disabled={submitting}
+              >
                 Back
               </Button>
               <Button
                 onClick={submitFeedback}
-                disabled={rating === null}
+                disabled={rating === null || submitting}
                 className="flex-1"
               >
-                Submit
+                {submitting ? 'Submitting…' : 'Submit'}
               </Button>
             </div>
           </div>
