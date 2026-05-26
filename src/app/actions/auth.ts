@@ -3,7 +3,6 @@
 import { headers } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { sendSignupNotification } from '@/lib/email';
 
 type ActionResult = { ok: true } | { ok: false; error: string };
 
@@ -78,15 +77,6 @@ export async function signUp(formData: FormData): Promise<ActionResult> {
           },
           { onConflict: 'user_id' },
         );
-
-      // Fire-and-forget the BoN notification (don't block signup if it fails).
-      sendSignupNotification({
-        firstName,
-        lastName,
-        email,
-        phone,
-        userId: user.id,
-      }).catch((err) => console.error('[signup] notification failed', err));
     }
   } catch (err) {
     console.error('[signup] contact upsert failed', err);
