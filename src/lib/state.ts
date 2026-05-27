@@ -23,6 +23,7 @@ export type DayItemValues = {
 export type TrackerSnapshot = {
   days: DayState[];
   otherLabel: string;
+  fiberSpiceEnabled: boolean;
   rewardUnlocked: boolean;
   rewardClaimedAt: string | null;
   rewardDismissed: boolean;
@@ -35,6 +36,7 @@ export type TrackerState = TrackerSnapshot & {
   toggleItem: (day: number, item: HabitItem) => void;
   setDayItems: (day: number, values: DayItemValues) => void;
   setOtherLabel: (label: string) => void;
+  setFiberSpiceEnabled: (enabled: boolean) => void;
   submitDay: (day: number) => void;
   dismissReward: () => void;
   showReward: () => void;
@@ -58,6 +60,7 @@ export function emptySnapshot(): TrackerSnapshot {
   return {
     days: createInitialDays(),
     otherLabel: 'Other',
+    fiberSpiceEnabled: true,
     rewardUnlocked: false,
     rewardClaimedAt: null,
     rewardDismissed: false,
@@ -90,6 +93,8 @@ export const useTrackerStore = create<TrackerState>()((set) => ({
 
   setOtherLabel: (label) => set({ otherLabel: label }),
 
+  setFiberSpiceEnabled: (enabled) => set({ fiberSpiceEnabled: enabled }),
+
   submitDay: (day) =>
     set((state) => {
       const target = state.days.find((d) => d.dayNumber === day);
@@ -121,6 +126,7 @@ export const useTrackerStore = create<TrackerState>()((set) => ({
     set((state) => ({
       days: createInitialDays(),
       otherLabel: state.otherLabel,
+      fiberSpiceEnabled: state.fiberSpiceEnabled,
       rewardUnlocked: false,
       rewardClaimedAt: null,
       rewardDismissed: false,
@@ -132,7 +138,7 @@ export const useTrackerStore = create<TrackerState>()((set) => ({
       const days = state.days.map((d) => {
         let fruits = Math.random() > 0.25;
         const veggies = Math.random() > 0.25;
-        const fiberSpice = Math.random() > 0.25;
+        const fiberSpice = state.fiberSpiceEnabled ? Math.random() > 0.25 : false;
         const other = Math.random() > 0.25;
         if (!(fruits || veggies || fiberSpice || other)) fruits = true;
         return {

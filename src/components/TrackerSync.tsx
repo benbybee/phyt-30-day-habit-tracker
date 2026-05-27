@@ -39,7 +39,10 @@ export function TrackerSync({ userId }: Props) {
           (d) => !d.completed && !d.fruits && !d.veggies && !d.fiberSpice && !d.other,
         );
         if (allEmpty) {
-          void clearTracker(supabase, userId);
+          void clearTracker(supabase, userId, {
+            otherLabel: state.otherLabel,
+            fiberSpiceEnabled: state.fiberSpiceEnabled,
+          });
         } else {
           void saveAllDays(supabase, userId, state.days);
         }
@@ -49,15 +52,17 @@ export function TrackerSync({ userId }: Props) {
         }
       }
 
-      // Reward state changes — write immediately.
-      const rewardChanged =
+      // Reward + fiberSpiceEnabled state changes — write immediately.
+      const stateChanged =
         state.rewardUnlocked !== prev.rewardUnlocked ||
         state.rewardClaimedAt !== prev.rewardClaimedAt ||
-        state.rewardDismissed !== prev.rewardDismissed;
+        state.rewardDismissed !== prev.rewardDismissed ||
+        state.fiberSpiceEnabled !== prev.fiberSpiceEnabled;
 
-      if (rewardChanged) {
+      if (stateChanged) {
         void saveState(supabase, userId, {
           otherLabel: state.otherLabel,
+          fiberSpiceEnabled: state.fiberSpiceEnabled,
           rewardUnlocked: state.rewardUnlocked,
           rewardClaimedAt: state.rewardClaimedAt,
           rewardDismissed: state.rewardDismissed,
@@ -70,6 +75,7 @@ export function TrackerSync({ userId }: Props) {
         labelTimer = setTimeout(() => {
           void saveState(supabase, userId, {
             otherLabel: state.otherLabel,
+            fiberSpiceEnabled: state.fiberSpiceEnabled,
             rewardUnlocked: state.rewardUnlocked,
             rewardClaimedAt: state.rewardClaimedAt,
             rewardDismissed: state.rewardDismissed,

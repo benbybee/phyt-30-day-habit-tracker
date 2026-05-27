@@ -72,10 +72,10 @@ export function RewardReveal({ open, userId, onClose }: Props) {
           <div className="space-y-5">
             <DialogHeader className="text-center">
               <DialogTitle className="text-2xl font-bold text-slate-900">
-                You did it. 30 days.
+                You did it! 30 Days of Healthy Habits.
               </DialogTitle>
               <DialogDescription>
-                Here&apos;s your reward for completing the tracker.
+                Here is your reward for staying consistent and investing in your health.
               </DialogDescription>
             </DialogHeader>
 

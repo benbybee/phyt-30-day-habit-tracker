@@ -22,11 +22,19 @@ type Props = {
   open: boolean;
   dayNumber: number;
   otherLabel: string;
+  fiberSpiceEnabled?: boolean;
   onSubmit: (toggles: Toggles) => void;
   onClose: () => void;
 };
 
-export function CheckInDialog({ open, dayNumber, otherLabel, onSubmit, onClose }: Props) {
+export function CheckInDialog({
+  open,
+  dayNumber,
+  otherLabel,
+  fiberSpiceEnabled = true,
+  onSubmit,
+  onClose,
+}: Props) {
   const [toggles, setToggles] = useState<Toggles>({
     fruits: false,
     veggies: false,
@@ -62,7 +70,7 @@ export function CheckInDialog({ open, dayNumber, otherLabel, onSubmit, onClose }
         <div className="py-2">
           {row('fruits', 'Fruits', fruitsId)}
           {row('veggies', 'Veggies', veggiesId)}
-          {row('fiberSpice', 'Fiber & Spice', fiberId)}
+          {fiberSpiceEnabled && row('fiberSpice', 'Fiber & Spice', fiberId)}
           {row('other', otherLabel || 'Other', otherId)}
         </div>
         <DialogFooter>

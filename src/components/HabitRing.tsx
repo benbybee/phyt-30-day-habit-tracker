@@ -17,11 +17,18 @@ const LEAF_SIZE = 98;
 
 type Props = {
   days: DayState[];
+  fiberSpiceEnabled?: boolean;
   onSegmentClick: (dayNumber: number) => void;
 };
 
-export function HabitRing({ days, onSegmentClick }: Props) {
+type BandKey = 'fruits' | 'veggies' | 'fiberSpice' | 'other';
+
+export function HabitRing({ days, fiberSpiceEnabled = true, onSegmentClick }: Props) {
   const segs = segmentAngles(30);
+
+  const activeBands: BandKey[] = fiberSpiceEnabled
+    ? ['fruits', 'veggies', 'fiberSpice', 'other']
+    : ['fruits', 'veggies', 'other'];
 
   return (
     <svg
@@ -35,40 +42,14 @@ export function HabitRing({ days, onSegmentClick }: Props) {
         const mid = (start + end) / 2;
         const labelPos = polar(CX, CY, LABEL_R, mid);
 
-        const bands = [
-          {
-            item: 'fruits' as const,
-            outerR: OUTER_R,
-            innerR: OUTER_R - BAND_WIDTH,
-            filled: day.fruits,
-            color: CATEGORY_COLORS.fruits,
-            delay: 0,
-          },
-          {
-            item: 'veggies' as const,
-            outerR: OUTER_R - BAND_WIDTH - GAP,
-            innerR: OUTER_R - 2 * BAND_WIDTH - GAP,
-            filled: day.veggies,
-            color: CATEGORY_COLORS.veggies,
-            delay: 0.1,
-          },
-          {
-            item: 'fiberSpice' as const,
-            outerR: OUTER_R - 2 * BAND_WIDTH - 2 * GAP,
-            innerR: OUTER_R - 3 * BAND_WIDTH - 2 * GAP,
-            filled: day.fiberSpice,
-            color: CATEGORY_COLORS.fiberSpice,
-            delay: 0.2,
-          },
-          {
-            item: 'other' as const,
-            outerR: OUTER_R - 3 * BAND_WIDTH - 3 * GAP,
-            innerR: OUTER_R - 4 * BAND_WIDTH - 3 * GAP,
-            filled: day.other,
-            color: CATEGORY_COLORS.other,
-            delay: 0.3,
-          },
-        ];
+        const bands = activeBands.map((key, bi) => ({
+          item: key,
+          outerR: OUTER_R - bi * (BAND_WIDTH + GAP),
+          innerR: OUTER_R - bi * (BAND_WIDTH + GAP) - BAND_WIDTH,
+          filled: day[key],
+          color: CATEGORY_COLORS[key],
+          delay: bi * 0.1,
+        }));
 
         return (
           <g

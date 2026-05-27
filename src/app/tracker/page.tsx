@@ -12,12 +12,20 @@ export default async function TrackerPage() {
   // Safety net: proxy.ts also enforces auth, but never trust a single layer.
   if (!user) redirect('/login');
 
-  const snapshot = await loadSnapshot(supabase, user.id);
+  const [snapshot, contactRes] = await Promise.all([
+    loadSnapshot(supabase, user.id),
+    supabase
+      .from('contacts')
+      .select('first_name')
+      .eq('user_id', user.id)
+      .maybeSingle<{ first_name: string }>(),
+  ]);
 
   return (
     <TrackerClient
       userId={user.id}
       userEmail={user.email ?? ''}
+      firstName={contactRes.data?.first_name ?? undefined}
       initialSnapshot={snapshot}
     />
   );
