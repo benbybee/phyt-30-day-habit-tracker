@@ -86,8 +86,10 @@ export default function TrackerClient({
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
               Join the Phyt
             </h1>
-            <p className="mt-1 text-xs sm:text-sm text-slate-600">
-              30-day wellness habit tracker
+            <p className="mt-1 text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">
+              Your 30-Day Whole Health System Journey. Track your Fruits, Veggies, Fiber
+              &amp; Spice, plus a custom health habit of your choice. Finish to get your
+              reward.
             </p>
           </div>
           <div className="mt-3 flex flex-wrap items-center justify-center gap-3 sm:mt-0 sm:absolute sm:right-0 sm:top-0">

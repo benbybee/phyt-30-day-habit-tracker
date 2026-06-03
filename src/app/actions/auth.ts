@@ -1,32 +1,20 @@
 'use server';
 
-import { headers } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 
-type ActionResult = { ok: true } | { ok: false; error: string };
+type ActionResult =
+  | { ok: true; needsConfirmation?: boolean }
+  | { ok: false; error: string };
 
-function originFromHeaders(host: string | null, proto: string | null) {
-  if (!host) return process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
-  return `${proto ?? 'https'}://${host}`;
-}
-
-export async function sendMagicLink(formData: FormData): Promise<ActionResult> {
+export async function signIn(formData: FormData): Promise<ActionResult> {
   const email = String(formData.get('email') ?? '').trim().toLowerCase();
+  const password = String(formData.get('password') ?? '');
   if (!email) return { ok: false, error: 'Email is required.' };
-
-  const hdrs = await headers();
-  const origin = originFromHeaders(hdrs.get('host'), hdrs.get('x-forwarded-proto'));
+  if (!password) return { ok: false, error: 'Password is required.' };
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      emailRedirectTo: `${origin}/auth/callback`,
-      shouldCreateUser: false, // login-only: do not create new accounts here
-    },
-  });
-
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) return { ok: false, error: error.message };
   return { ok: true };
 }
@@ -36,52 +24,45 @@ export async function signUp(formData: FormData): Promise<ActionResult> {
   const lastName = String(formData.get('lastName') ?? '').trim();
   const email = String(formData.get('email') ?? '').trim().toLowerCase();
   const phone = String(formData.get('phone') ?? '').trim() || null;
+  const password = String(formData.get('password') ?? '');
 
   if (!firstName) return { ok: false, error: 'First name is required.' };
   if (!lastName) return { ok: false, error: 'Last name is required.' };
   if (!email) return { ok: false, error: 'Email is required.' };
-
-  const hdrs = await headers();
-  const origin = originFromHeaders(hdrs.get('host'), hdrs.get('x-forwarded-proto'));
+  if (password.length < 8) {
+    return { ok: false, error: 'Password must be at least 8 characters.' };
+  }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithOtp({
+  const { data, error } = await supabase.auth.signUp({
     email,
-    options: {
-      emailRedirectTo: `${origin}/auth/callback?welcome=1`,
-      shouldCreateUser: true,
-      data: { first_name: firstName, last_name: lastName, phone },
-    },
+    password,
+    options: { data: { first_name: firstName, last_name: lastName, phone } },
   });
 
   if (error) return { ok: false, error: error.message };
 
-  // Upsert the contact record now (idempotent on user_id). We don't know the
-  // user_id yet because they haven't clicked the magic link, but the auth.users
-  // row was created by the OTP. We use the admin client to find/insert by email.
-  try {
-    const admin = createAdminClient();
-    const { data: userList } = await admin.auth.admin.listUsers();
-    const user = userList?.users.find((u) => u.email === email);
-
-    if (user) {
+  // We now have the user id immediately (unlike the old magic-link flow), so
+  // persist the contact record straight away. Use the admin client so this also
+  // works when email confirmation is enabled and no session exists yet.
+  const userId = data.user?.id;
+  if (userId) {
+    try {
+      const admin = createAdminClient();
       await admin
         .from('contacts')
         .upsert(
-          {
-            user_id: user.id,
-            first_name: firstName,
-            last_name: lastName,
-            email,
-            phone,
-          },
+          { user_id: userId, first_name: firstName, last_name: lastName, email, phone },
           { onConflict: 'user_id' },
         );
+    } catch (err) {
+      console.error('[signup] contact upsert failed', err);
     }
-  } catch (err) {
-    console.error('[signup] contact upsert failed', err);
   }
 
+  // With email confirmation enabled, signUp returns no session until the user
+  // confirms. With it disabled, the user is signed in immediately.
+  if (!data.session) return { ok: true, needsConfirmation: true };
   return { ok: true };
 }
 

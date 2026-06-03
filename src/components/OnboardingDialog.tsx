@@ -58,7 +58,7 @@ export function OnboardingDialog({ open, firstName, onClose }: Props) {
               htmlFor="other-habit-input"
               className="text-sm font-medium text-slate-700 block mb-1.5"
             >
-              Your custom habit
+              Type in your own
             </label>
             <input
               id="other-habit-input"

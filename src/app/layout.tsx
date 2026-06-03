@@ -1,15 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+// Body / default font for all copy.
+const sprigSans = localFont({
+  src: "./fonts/FAIRE-SprigSans-Regular.woff2",
+  variable: "--font-sprig",
+  weight: "400",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+// Display font for headlines and the "Phyt" branding.
+const romie = localFont({
+  src: "./fonts/Romie-Medium.otf",
+  variable: "--font-romie",
+  weight: "500",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -31,7 +37,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${sprigSans.variable} ${romie.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col overflow-x-hidden">{children}</body>
