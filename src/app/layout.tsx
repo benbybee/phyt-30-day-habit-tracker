@@ -2,19 +2,15 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
-// Body / default font for all copy.
-const sprigSans = localFont({
-  src: "./fonts/FAIRE-SprigSans-Regular.woff2",
-  variable: "--font-sprig",
-  weight: "400",
-  display: "swap",
-});
-
-// Display font for headlines and the "Phyt" branding.
-const romie = localFont({
-  src: "./fonts/Romie-Medium.otf",
-  variable: "--font-romie",
-  weight: "500",
+// Gotham — Balance of Nature brand font, used for everything (body + headlines).
+const gotham = localFont({
+  src: [
+    { path: "./fonts/Gotham-Book.otf", weight: "400", style: "normal" },
+    { path: "./fonts/Gotham-Medium.otf", weight: "500", style: "normal" },
+    { path: "./fonts/Gotham-Bold.otf", weight: "700", style: "normal" },
+    { path: "./fonts/Gotham-Black.otf", weight: "900", style: "normal" },
+  ],
+  variable: "--font-gotham",
   display: "swap",
 });
 
@@ -37,7 +33,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${sprigSans.variable} ${romie.variable} h-full antialiased`}
+      className={`${gotham.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col overflow-x-hidden">{children}</body>

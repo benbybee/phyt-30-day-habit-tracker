@@ -4,17 +4,23 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
-import { signIn } from '@/app/actions/auth';
+import { updatePassword } from '@/app/actions/auth';
 
-export default function LoginPage() {
+export default function ResetPasswordPage() {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = (formData: FormData) => {
     setError(null);
+    const password = String(formData.get('password') ?? '');
+    const confirm = String(formData.get('confirm') ?? '');
+    if (password !== confirm) {
+      setError('Passwords do not match.');
+      return;
+    }
     startTransition(async () => {
-      const result = await signIn(formData);
+      const result = await updatePassword(formData);
       if (result.ok) {
         router.replace('/tracker');
         router.refresh();
@@ -28,51 +34,45 @@ export default function LoginPage() {
     'w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition-colors focus:border-slate-400 focus:ring-2 focus:ring-slate-100';
 
   return (
-    <main
-      className="flex min-h-screen items-center justify-center px-4 py-8 bg-white"
-    >
+    <main className="flex min-h-screen items-center justify-center px-4 py-8 bg-white">
       <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-sm sm:p-8">
         <div className="text-center mb-6">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
-            Welcome
+            Set a new password
           </h1>
-          <p className="mt-1 text-sm text-slate-600">Sign in to your tracker</p>
+          <p className="mt-1 text-sm text-slate-600">
+            Choose a new password for your account.
+          </p>
         </div>
 
         <form action={handleSubmit} className="space-y-4">
           <div className="space-y-1">
-            <label htmlFor="email" className="text-sm font-medium text-slate-700">
-              Email
+            <label htmlFor="password" className="text-sm font-medium text-slate-700">
+              New password
             </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              autoComplete="email"
-              placeholder="you@example.com"
-              className={inputCls}
-            />
-          </div>
-          <div className="space-y-1">
-            <div className="flex items-center justify-between">
-              <label htmlFor="password" className="text-sm font-medium text-slate-700">
-                Password
-              </label>
-              <Link
-                href="/forgot-password"
-                className="text-xs font-medium text-slate-500 hover:text-slate-900 transition-colors"
-              >
-                Forgot password?
-              </Link>
-            </div>
             <input
               id="password"
               name="password"
               type="password"
               required
-              autoComplete="current-password"
-              placeholder="••••••••"
+              minLength={8}
+              autoComplete="new-password"
+              placeholder="At least 8 characters"
+              className={inputCls}
+            />
+          </div>
+          <div className="space-y-1">
+            <label htmlFor="confirm" className="text-sm font-medium text-slate-700">
+              Confirm password
+            </label>
+            <input
+              id="confirm"
+              name="confirm"
+              type="password"
+              required
+              minLength={8}
+              autoComplete="new-password"
+              placeholder="Re-enter your password"
               className={inputCls}
             />
           </div>
@@ -82,14 +82,13 @@ export default function LoginPage() {
             </p>
           )}
           <Button type="submit" disabled={pending} className="w-full">
-            {pending ? 'Signing in…' : 'Sign in'}
+            {pending ? 'Saving…' : 'Update password'}
           </Button>
         </form>
 
         <p className="mt-6 text-center text-xs text-slate-500">
-          Don&apos;t have an account?{' '}
-          <Link href="/signup" className="font-medium text-slate-900 underline">
-            Sign up
+          <Link href="/login" className="font-medium text-slate-900 underline">
+            Back to sign in
           </Link>
         </p>
       </div>

@@ -1,11 +1,17 @@
 'use server';
 
+import { headers } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 type ActionResult =
   | { ok: true; needsConfirmation?: boolean }
   | { ok: false; error: string };
+
+function originFromHeaders(host: string | null, proto: string | null) {
+  if (!host) return process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+  return `${proto ?? 'https'}://${host}`;
+}
 
 export async function signIn(formData: FormData): Promise<ActionResult> {
   const email = String(formData.get('email') ?? '').trim().toLowerCase();
@@ -63,6 +69,43 @@ export async function signUp(formData: FormData): Promise<ActionResult> {
   // With email confirmation enabled, signUp returns no session until the user
   // confirms. With it disabled, the user is signed in immediately.
   if (!data.session) return { ok: true, needsConfirmation: true };
+  return { ok: true };
+}
+
+export async function requestPasswordReset(formData: FormData): Promise<ActionResult> {
+  const email = String(formData.get('email') ?? '').trim().toLowerCase();
+  if (!email) return { ok: false, error: 'Email is required.' };
+
+  const hdrs = await headers();
+  const origin = originFromHeaders(hdrs.get('host'), hdrs.get('x-forwarded-proto'));
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${origin}/auth/callback?next=/reset-password`,
+  });
+
+  // Don't leak whether the address exists — report success regardless.
+  if (error) console.error('[requestPasswordReset]', error.message);
+  return { ok: true };
+}
+
+export async function updatePassword(formData: FormData): Promise<ActionResult> {
+  const password = String(formData.get('password') ?? '');
+  if (password.length < 8) {
+    return { ok: false, error: 'Password must be at least 8 characters.' };
+  }
+
+  // Requires the recovery session established by the email link callback.
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { ok: false, error: 'Your reset link has expired. Please request a new one.' };
+  }
+
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) return { ok: false, error: error.message };
   return { ok: true };
 }
 
