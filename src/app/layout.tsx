@@ -15,8 +15,9 @@ const gotham = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Join the Phyt — 30 Day Habit Tracker",
-  description: "Track 30 days of Fruits, Veggies, and Fiber & Spice.",
+  title: "30-Day Whole Health System Supplement Journey Tracker",
+  description:
+    "Track your Fruits, Veggies, Fiber & Spice, plus a custom health habit of your choice. Finish to get your reward.",
 };
 
 export const viewport: Viewport = {

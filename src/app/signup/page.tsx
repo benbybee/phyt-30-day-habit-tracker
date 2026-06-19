@@ -38,6 +38,12 @@ export default function SignupPage() {
     >
       <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-sm sm:p-8">
         <div className="text-center mb-6">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/bon-logo.png"
+            alt="Balance of Nature"
+            className="mx-auto mb-5 h-auto w-44"
+          />
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
             Join the Phyt
           </h1>
