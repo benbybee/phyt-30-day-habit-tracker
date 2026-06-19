@@ -76,17 +76,8 @@ export default function TrackerClient({
     <>
       <TrackerSync userId={userId} />
       <main className="max-w-6xl mx-auto my-4 p-4 rounded-xl shadow-sm sm:my-8 sm:p-8 sm:rounded-2xl bg-white">
-        <header className="relative mb-6 sm:mb-8">
-          <div className="text-center pt-1">
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 max-w-2xl mx-auto">
-              Your 30-Day Whole Health System Supplement Journey
-            </h1>
-            <p className="mt-2 text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">
-              Track your Fruits, Veggies, Fiber &amp; Spice, plus a custom health habit of
-              your choice. Finish to get your reward.
-            </p>
-          </div>
-          <div className="mt-3 flex flex-wrap items-center justify-center gap-3 sm:mt-0 sm:absolute sm:right-0 sm:top-0">
+        <header className="mb-6 sm:mb-8">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:justify-end">
             {rewardUnlocked && rewardDismissed && (
               <Button size="sm" onClick={showReward}>
                 Your reward is ready →
@@ -119,6 +110,15 @@ export default function TrackerClient({
                 Sign out
               </button>
             </form>
+          </div>
+          <div className="mt-4 text-center sm:mt-5">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 max-w-2xl mx-auto">
+              Your 30-Day Whole Health System Supplement Journey
+            </h1>
+            <p className="mt-2 text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">
+              Track your Fruits, Veggies, Fiber &amp; Spice, plus a custom health habit of
+              your choice. Finish to get your reward.
+            </p>
           </div>
         </header>
 
