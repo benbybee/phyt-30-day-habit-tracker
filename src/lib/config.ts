@@ -1,3 +1,7 @@
+// Weekly signups digest — emailed via Resend by the cron route.
+export const DIGEST_RECIPIENT = 'aeldridge@bonadmin.com';
+export const DIGEST_FROM = 'Balance of Nature <no-reply@track.balanceofnature.com>';
+
 export const DEFAULT_PROMO_CODE = 'PHYT30';
 // Legacy alias — fallback code when no referral source is recorded.
 export const DISCOUNT_CODE = DEFAULT_PROMO_CODE;
