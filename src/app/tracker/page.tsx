@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { loadSnapshot } from '@/lib/tracker-repo';
+import { promoCodeForSource } from '@/lib/config';
 import TrackerClient from './TrackerClient';
 
 export default async function TrackerPage() {
@@ -16,9 +17,9 @@ export default async function TrackerPage() {
     loadSnapshot(supabase, user.id),
     supabase
       .from('contacts')
-      .select('first_name')
+      .select('first_name, referral_source')
       .eq('user_id', user.id)
-      .maybeSingle<{ first_name: string }>(),
+      .maybeSingle<{ first_name: string; referral_source: string | null }>(),
   ]);
 
   return (
@@ -26,6 +27,7 @@ export default async function TrackerPage() {
       userId={user.id}
       userEmail={user.email ?? ''}
       firstName={contactRes.data?.first_name ?? undefined}
+      promoCode={promoCodeForSource(contactRes.data?.referral_source)}
       initialSnapshot={snapshot}
     />
   );

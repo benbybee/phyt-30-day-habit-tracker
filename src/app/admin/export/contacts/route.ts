@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { isAdminEmail } from '@/lib/admin';
 import { toCsv, csvFilename } from '@/lib/csv';
+import { labelForSource, promoCodeForSource } from '@/lib/config';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,6 +13,7 @@ type ContactRow = {
   last_name: string;
   email: string;
   phone: string | null;
+  referral_source: string | null;
   created_at: string;
 };
 
@@ -31,7 +33,7 @@ export async function GET() {
   const [contactsRes, daysRes] = await Promise.all([
     admin
       .from('contacts')
-      .select('user_id, first_name, last_name, email, phone, created_at')
+      .select('user_id, first_name, last_name, email, phone, referral_source, created_at')
       .order('created_at', { ascending: false })
       .returns<ContactRow[]>(),
     admin
@@ -53,6 +55,8 @@ export async function GET() {
     'last_name',
     'email',
     'phone',
+    'connection_source',
+    'promo_code',
     'days_completed',
     'signed_up_at',
     'user_id',
@@ -63,6 +67,8 @@ export async function GET() {
     c.last_name,
     c.email,
     c.phone,
+    labelForSource(c.referral_source),
+    promoCodeForSource(c.referral_source),
     completedByUser.get(c.user_id) ?? 0,
     c.created_at,
     c.user_id,

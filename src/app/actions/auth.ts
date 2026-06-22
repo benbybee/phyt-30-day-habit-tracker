@@ -3,6 +3,7 @@
 import { headers } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { isReferralSourceKey } from '@/lib/config';
 
 type ActionResult =
   | { ok: true; needsConfirmation?: boolean }
@@ -31,6 +32,9 @@ export async function signUp(formData: FormData): Promise<ActionResult> {
   const email = String(formData.get('email') ?? '').trim().toLowerCase();
   const phone = String(formData.get('phone') ?? '').trim() || null;
   const password = String(formData.get('password') ?? '');
+  const rawSource = String(formData.get('referralSource') ?? '').trim();
+  // Only persist a known channel key; anything else is dropped to null.
+  const referralSource = isReferralSourceKey(rawSource) ? rawSource : null;
 
   if (!firstName) return { ok: false, error: 'First name is required.' };
   if (!lastName) return { ok: false, error: 'Last name is required.' };
@@ -43,7 +47,14 @@ export async function signUp(formData: FormData): Promise<ActionResult> {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: { data: { first_name: firstName, last_name: lastName, phone } },
+    options: {
+      data: {
+        first_name: firstName,
+        last_name: lastName,
+        phone,
+        referral_source: referralSource,
+      },
+    },
   });
 
   if (error) return { ok: false, error: error.message };
@@ -58,7 +69,14 @@ export async function signUp(formData: FormData): Promise<ActionResult> {
       await admin
         .from('contacts')
         .upsert(
-          { user_id: userId, first_name: firstName, last_name: lastName, email, phone },
+          {
+            user_id: userId,
+            first_name: firstName,
+            last_name: lastName,
+            email,
+            phone,
+            referral_source: referralSource,
+          },
           { onConflict: 'user_id' },
         );
     } catch (err) {

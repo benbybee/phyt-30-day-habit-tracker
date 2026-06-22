@@ -10,18 +10,20 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { DISCOUNT_CODE, DISCOUNT_URL } from '@/lib/config';
+import { DEFAULT_PROMO_CODE, DISCOUNT_URL } from '@/lib/config';
 import { createClient } from '@/lib/supabase/browser';
 
 type Props = {
   open: boolean;
   userId: string;
+  /** Promo code shown on completion — derived from the user's signup channel. */
+  code?: string;
   onClose: () => void;
 };
 
 type View = 'reward' | 'feedback' | 'thanks';
 
-export function RewardReveal({ open, userId, onClose }: Props) {
+export function RewardReveal({ open, userId, code = DEFAULT_PROMO_CODE, onClose }: Props) {
   const [view, setView] = useState<View>('reward');
   const [rating, setRating] = useState<number | null>(null);
   const [comments, setComments] = useState('');
@@ -40,7 +42,7 @@ export function RewardReveal({ open, userId, onClose }: Props) {
 
   const copy = async () => {
     try {
-      await navigator.clipboard.writeText(DISCOUNT_CODE);
+      await navigator.clipboard.writeText(code);
       toast.success('Code copied');
     } catch {
       toast.error('Copy failed — select the code and copy manually.');
@@ -88,7 +90,7 @@ export function RewardReveal({ open, userId, onClose }: Props) {
                 Your discount code
               </div>
               <div className="mt-1 font-mono text-2xl font-bold tracking-[0.2em] text-slate-900">
-                {DISCOUNT_CODE}
+                {code}
               </div>
               <div className="mt-1 text-[11px] text-slate-400 group-hover:text-slate-600">
                 Tap to copy

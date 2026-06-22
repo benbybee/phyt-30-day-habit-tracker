@@ -19,6 +19,7 @@ type Props = {
   userId: string;
   userEmail: string;
   firstName?: string;
+  promoCode: string;
   initialSnapshot: TrackerSnapshot;
 };
 
@@ -26,6 +27,7 @@ export default function TrackerClient({
   userId,
   userEmail,
   firstName,
+  promoCode,
   initialSnapshot,
 }: Props) {
   // Initialize the store synchronously on first render so all selectors below
@@ -160,7 +162,12 @@ export default function TrackerClient({
           onClose={() => setOnboardingOpen(false)}
         />
 
-        <RewardReveal open={rewardOpen} userId={userId} onClose={dismissReward} />
+        <RewardReveal
+          open={rewardOpen}
+          userId={userId}
+          code={promoCode}
+          onClose={dismissReward}
+        />
         <Toaster />
       </main>
     </>

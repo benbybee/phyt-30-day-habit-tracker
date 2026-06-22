@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import { signUp } from '@/app/actions/auth';
+import { REFERRAL_SOURCES } from '@/lib/config';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -137,6 +138,30 @@ export default function SignupPage() {
                 placeholder="+1 555 555 5555"
                 className={inputCls}
               />
+            </div>
+            <div className="space-y-1">
+              <label
+                htmlFor="referralSource"
+                className="text-sm font-medium text-slate-700"
+              >
+                How Did You Connect With Balance of Nature?
+              </label>
+              <select
+                id="referralSource"
+                name="referralSource"
+                required
+                defaultValue=""
+                className={`${inputCls} bg-white`}
+              >
+                <option value="" disabled>
+                  Select an option
+                </option>
+                {REFERRAL_SOURCES.map((s) => (
+                  <option key={s.key} value={s.key}>
+                    {s.label}
+                  </option>
+                ))}
+              </select>
             </div>
             {error && (
               <p className="text-xs text-red-600" role="alert">

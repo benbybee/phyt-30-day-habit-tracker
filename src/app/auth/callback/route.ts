@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
         first_name?: string;
         last_name?: string;
         phone?: string | null;
+        referral_source?: string | null;
       };
 
       const { data: existing } = await admin
@@ -43,6 +44,7 @@ export async function GET(request: NextRequest) {
           last_name: meta.last_name ?? '',
           email: data.user.email!,
           phone: meta.phone ?? null,
+          referral_source: meta.referral_source ?? null,
         });
       }
     } catch (err) {
