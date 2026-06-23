@@ -115,7 +115,7 @@ export default function TrackerClient({
           </div>
           <div className="mt-4 text-center sm:mt-5">
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 max-w-2xl mx-auto">
-              Your 30-Day Whole Health System Supplement Journey
+              Your 30-Day Whole Health System™ Supplement Journey
             </h1>
             <p className="mt-2 text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">
               Track your Fruits, Veggies, Fiber &amp; Spice, plus a custom health habit of

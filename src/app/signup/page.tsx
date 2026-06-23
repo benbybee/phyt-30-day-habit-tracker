@@ -46,7 +46,7 @@ export default function SignupPage() {
             className="mx-auto mb-5 h-auto w-44"
           />
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
-            30-Day Whole Health System Supplement Journey Tracker
+            30-Day Whole Health System™ Supplement Journey Tracker
           </h1>
           <p className="mt-1 text-sm text-slate-600">Create your tracker account</p>
         </div>
