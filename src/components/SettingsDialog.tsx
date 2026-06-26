@@ -32,7 +32,7 @@ export function SettingsDialog({ open, onClose }: Props) {
           <div className="flex items-center justify-between py-3 border-b last:border-0">
             <div className="flex-1 pr-3">
               <label htmlFor="fiber-spice-toggle" className="text-sm font-medium text-slate-900">
-                Track Fiber &amp; Spice
+                Track Fiber &amp; Spice Supplement
               </label>
               <p className="text-xs text-slate-500 mt-0.5">
                 Turn this off if you don&apos;t want to track Fiber &amp; Spice.

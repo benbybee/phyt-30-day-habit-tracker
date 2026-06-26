@@ -47,7 +47,7 @@ export function OnboardingDialog({ open, firstName, onClose }: Props) {
             {firstName ? `Welcome, ${firstName}!` : 'Welcome!'}
           </DialogTitle>
           <DialogDescription>
-            Alongside Fruits, Veggies, and Fiber &amp; Spice, you get to choose one custom
+            Alongside Fruits, Veggies, and Fiber &amp; Spice Supplement, you get to choose one custom
             habit. Pick a suggestion below or type your own.
           </DialogDescription>
         </DialogHeader>

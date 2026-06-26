@@ -8,7 +8,7 @@ export default function Home() {
         Your 30-Day Whole Health System™ Supplement Journey
       </h1>
       <p className="text-lg text-slate-700 max-w-2xl">
-        Track your Fruits, Veggies, Fiber &amp; Spice, plus a custom health habit of your
+        Track your Fruits, Veggies, Fiber &amp; Spice Supplement, plus a custom health habit of your
         choice. Finish to get your reward.
       </p>
       <Link href="/tracker" className={buttonVariants({ size: 'lg' })}>

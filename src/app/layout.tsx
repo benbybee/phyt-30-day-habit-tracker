@@ -17,7 +17,7 @@ const gotham = localFont({
 export const metadata: Metadata = {
   title: "30-Day Whole Health System™ Supplement Journey Tracker",
   description:
-    "Track your Fruits, Veggies, Fiber & Spice, plus a custom health habit of your choice. Finish to get your reward.",
+    "Track your Fruits, Veggies, Fiber & Spice Supplement, plus a custom health habit of your choice. Finish to get your reward.",
 };
 
 export const viewport: Viewport = {

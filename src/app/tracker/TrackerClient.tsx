@@ -118,7 +118,7 @@ export default function TrackerClient({
               Your 30-Day Whole Health System™ Supplement Journey
             </h1>
             <p className="mt-2 text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">
-              Track your Fruits, Veggies, Fiber &amp; Spice, plus a custom health habit of
+              Track your Fruits, Veggies, Fiber &amp; Spice Supplement, plus a custom health habit of
               your choice. Finish to get your reward.
             </p>
           </div>
