@@ -35,7 +35,7 @@ export function SettingsDialog({ open, onClose }: Props) {
                 Track Fiber &amp; Spice Supplement
               </label>
               <p className="text-xs text-slate-500 mt-0.5">
-                Turn this off if you don&apos;t want to track Fiber &amp; Spice.
+                Turn this off if you don&apos;t want to track Fiber &amp; Spice Supplement.
               </p>
             </div>
             <Switch

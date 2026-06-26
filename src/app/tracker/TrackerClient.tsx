@@ -226,7 +226,7 @@ function HabitProgressFooter({
         {fiberSpiceEnabled && (
           <HabitRow
             image={FIBER_IMG}
-            label="Fiber & Spice"
+            label="Fiber & Spice Supplement"
             color={c.fiberSpice}
             count={counts.fiberSpice}
           />

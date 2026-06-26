@@ -70,7 +70,7 @@ export function CheckInDialog({
         <div className="py-2">
           {row('fruits', 'Fruits', fruitsId)}
           {row('veggies', 'Veggies', veggiesId)}
-          {fiberSpiceEnabled && row('fiberSpice', 'Fiber & Spice', fiberId)}
+          {fiberSpiceEnabled && row('fiberSpice', 'Fiber & Spice Supplement', fiberId)}
           {row('other', otherLabel || 'Other', otherId)}
         </div>
         <DialogFooter>
