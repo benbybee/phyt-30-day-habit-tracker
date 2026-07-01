@@ -77,7 +77,7 @@ export function RewardReveal({ open, userId, code = DEFAULT_PROMO_CODE, onClose 
                 You did it! 30 Days of Healthy Habits.
               </DialogTitle>
               <DialogDescription>
-                Here is your reward for staying consistent and investing in your health.
+                Here is your reward for staying consistent.
               </DialogDescription>
             </DialogHeader>
 
