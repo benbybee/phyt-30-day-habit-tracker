@@ -31,7 +31,7 @@ export function TrackerSync({ userId }: Props) {
         if (!dayEquals(next, before)) dayChanges.push(next);
       }
 
-      // Heuristic: if more than 10 days changed at once, it's reset/fillAll → bulk.
+      // Heuristic: if more than 10 days changed at once, treat it as a bulk replace.
       const fullReplace = dayChanges.length > 10;
 
       if (fullReplace) {

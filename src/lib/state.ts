@@ -40,8 +40,6 @@ export type TrackerState = TrackerSnapshot & {
   submitDay: (day: number) => void;
   dismissReward: () => void;
   showReward: () => void;
-  reset: () => void;
-  fillAll: () => void;
 };
 
 export function createInitialDays(): DayState[] {
@@ -121,41 +119,4 @@ export const useTrackerStore = create<TrackerState>()((set) => ({
 
   dismissReward: () => set({ rewardDismissed: true }),
   showReward: () => set({ rewardDismissed: false }),
-
-  reset: () =>
-    set((state) => ({
-      days: createInitialDays(),
-      otherLabel: state.otherLabel,
-      fiberSpiceEnabled: state.fiberSpiceEnabled,
-      rewardUnlocked: false,
-      rewardClaimedAt: null,
-      rewardDismissed: false,
-    })),
-
-  fillAll: () =>
-    set((state) => {
-      const nowIso = new Date().toISOString();
-      const days = state.days.map((d) => {
-        let fruits = Math.random() > 0.25;
-        const veggies = Math.random() > 0.25;
-        const fiberSpice = state.fiberSpiceEnabled ? Math.random() > 0.25 : false;
-        const other = Math.random() > 0.25;
-        if (!(fruits || veggies || fiberSpice || other)) fruits = true;
-        return {
-          ...d,
-          fruits,
-          veggies,
-          fiberSpice,
-          other,
-          completed: true,
-          completedAt: nowIso,
-        };
-      });
-      return {
-        days,
-        rewardUnlocked: true,
-        rewardClaimedAt: state.rewardClaimedAt ?? nowIso,
-        rewardDismissed: false,
-      };
-    }),
 }));

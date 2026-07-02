@@ -129,7 +129,7 @@ export async function saveState(
   );
 }
 
-/** Bulk upsert all 30 days — used by fillAll and the post-load sync. */
+/** Bulk upsert all 30 days — used by the bulk-sync path in TrackerSync. */
 export async function saveAllDays(
   supabase: SupabaseClient,
   userId: string,

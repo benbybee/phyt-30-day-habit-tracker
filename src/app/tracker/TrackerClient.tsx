@@ -46,8 +46,6 @@ export default function TrackerClient({
   const submitDay = useTrackerStore((s) => s.submitDay);
   const dismissReward = useTrackerStore((s) => s.dismissReward);
   const showReward = useTrackerStore((s) => s.showReward);
-  const reset = useTrackerStore((s) => s.reset);
-  const fillAll = useTrackerStore((s) => s.fillAll);
 
   const [openDay, setOpenDay] = useState<number | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -90,18 +88,6 @@ export default function TrackerClient({
               className="text-xs font-medium text-slate-600/80 hover:text-slate-900 transition-colors"
             >
               Settings
-            </button>
-            <button
-              onClick={fillAll}
-              className="text-xs font-medium text-slate-600/80 hover:text-slate-900 transition-colors"
-            >
-              Fill demo
-            </button>
-            <button
-              onClick={reset}
-              className="text-xs font-medium text-slate-600/80 hover:text-slate-900 transition-colors"
-            >
-              Reset demo
             </button>
             <form action={signOut}>
               <button
