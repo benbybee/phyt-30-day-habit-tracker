@@ -4,6 +4,7 @@ import { headers } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { isReferralSourceKey } from '@/lib/config';
+import { syncMarketingOptIn } from '@/lib/klaviyo';
 
 type ActionResult =
   | { ok: true; needsConfirmation?: boolean }
@@ -35,6 +36,8 @@ export async function signUp(formData: FormData): Promise<ActionResult> {
   const rawSource = String(formData.get('referralSource') ?? '').trim();
   // Only persist a known channel key; anything else is dropped to null.
   const referralSource = isReferralSourceKey(rawSource) ? rawSource : null;
+  // Unchecked checkboxes submit nothing; only an explicit "true" is consent.
+  const marketingOptIn = String(formData.get('marketingOptIn') ?? '') === 'true';
 
   if (!firstName) return { ok: false, error: 'First name is required.' };
   if (!lastName) return { ok: false, error: 'Last name is required.' };
@@ -76,12 +79,21 @@ export async function signUp(formData: FormData): Promise<ActionResult> {
             email,
             phone,
             referral_source: referralSource,
+            marketing_opt_in: marketingOptIn,
+            marketing_opt_in_at: marketingOptIn ? new Date().toISOString() : null,
           },
           { onConflict: 'user_id' },
         );
     } catch (err) {
       console.error('[signup] contact upsert failed', err);
     }
+  }
+
+  // Mirror the consent to Klaviyo (upsert profile + subscribe to the Master
+  // List). Awaited so it completes before the serverless function returns, but
+  // it never throws — the durable record is already in Supabase above.
+  if (marketingOptIn) {
+    await syncMarketingOptIn({ email, firstName, lastName, phone });
   }
 
   // With email confirmation enabled, signUp returns no session until the user

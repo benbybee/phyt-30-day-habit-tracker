@@ -163,6 +163,22 @@ export default function SignupPage() {
                 ))}
               </select>
             </div>
+            <label
+              htmlFor="marketingOptIn"
+              className="flex cursor-pointer items-start gap-2.5 rounded-lg border border-slate-200 bg-slate-50/60 p-3"
+            >
+              <input
+                id="marketingOptIn"
+                name="marketingOptIn"
+                type="checkbox"
+                value="true"
+                className="mt-0.5 h-4 w-4 shrink-0 accent-[#8dc640]"
+              />
+              <span className="text-[9.75px] leading-[1.5] text-slate-600">
+                I agree to receive marketing, education and update emails from Balance of
+                Nature. <span className="text-slate-400">I can unsubscribe anytime.</span>
+              </span>
+            </label>
             {error && (
               <p className="text-xs text-red-600" role="alert">
                 {error}
