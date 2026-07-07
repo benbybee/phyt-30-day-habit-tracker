@@ -44,6 +44,7 @@ describe('syncMarketingOptIn', () => {
       firstName: 'Al',
       lastName: 'Rivera',
       phone: '(500) 555-0006',
+      referralSource: 'American Red Cross Donation',
     });
 
     expect(fetchMock).toHaveBeenCalledTimes(2);
@@ -59,6 +60,7 @@ describe('syncMarketingOptIn', () => {
     expect(createBody.data.attributes.phone_number).toBe('+15005550006');
     expect(createBody.data.attributes.properties['Habit Tracker Opt-In']).toBe(true);
     expect(createBody.data.attributes.properties['Habit Tracker Opt-In Date']).toBeTruthy();
+    expect(createBody.data.attributes.properties['Referral Source']).toBe('American Red Cross Donation');
 
     const [subUrl, subInit] = fetchMock.mock.calls[1];
     expect(subUrl).toBe('https://a.klaviyo.com/api/profile-subscription-bulk-create-jobs');

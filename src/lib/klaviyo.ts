@@ -17,12 +17,15 @@ const MASTER_LIST_ID = process.env.KLAVIYO_MASTER_LIST_ID || 'WnZs4Z';
 const CUSTOM_SOURCE = '30-Day Habit Tracker';
 const OPT_IN_PROPERTY = 'Habit Tracker Opt-In';
 const OPT_IN_DATE_PROPERTY = 'Habit Tracker Opt-In Date';
+const REFERRAL_PROPERTY = 'Referral Source';
 
 export type KlaviyoContact = {
   email: string;
   firstName?: string | null;
   lastName?: string | null;
   phone?: string | null;
+  /** Human-readable "How did you connect?" label, stored as a Klaviyo property. */
+  referralSource?: string | null;
 };
 
 function klaviyoHeaders(apiKey: string): HeadersInit {
@@ -51,15 +54,17 @@ export function toE164(raw?: string | null): string | null {
 
 function profileAttributes(c: KlaviyoContact) {
   const phone = toE164(c.phone);
+  const properties: Record<string, unknown> = {
+    [OPT_IN_PROPERTY]: true,
+    [OPT_IN_DATE_PROPERTY]: new Date().toISOString(),
+  };
+  if (c.referralSource) properties[REFERRAL_PROPERTY] = c.referralSource;
   return {
     email: c.email,
     ...(c.firstName ? { first_name: c.firstName } : {}),
     ...(c.lastName ? { last_name: c.lastName } : {}),
     ...(phone ? { phone_number: phone } : {}),
-    properties: {
-      [OPT_IN_PROPERTY]: true,
-      [OPT_IN_DATE_PROPERTY]: new Date().toISOString(),
-    },
+    properties,
   };
 }
 

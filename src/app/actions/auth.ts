@@ -3,7 +3,7 @@
 import { headers } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { isReferralSourceKey } from '@/lib/config';
+import { isReferralSourceKey, labelForSource } from '@/lib/config';
 import { syncMarketingOptIn } from '@/lib/klaviyo';
 
 type ActionResult =
@@ -93,7 +93,13 @@ export async function signUp(formData: FormData): Promise<ActionResult> {
   // List). Awaited so it completes before the serverless function returns, but
   // it never throws — the durable record is already in Supabase above.
   if (marketingOptIn) {
-    await syncMarketingOptIn({ email, firstName, lastName, phone });
+    await syncMarketingOptIn({
+      email,
+      firstName,
+      lastName,
+      phone,
+      referralSource: labelForSource(referralSource) || null,
+    });
   }
 
   // With email confirmation enabled, signUp returns no session until the user
