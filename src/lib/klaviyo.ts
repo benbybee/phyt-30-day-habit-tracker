@@ -26,6 +26,10 @@ export type KlaviyoContact = {
   phone?: string | null;
   /** Human-readable "How did you connect?" label, stored as a Klaviyo property. */
   referralSource?: string | null;
+  /** Subscribe to email marketing on the Master List. */
+  emailConsent?: boolean;
+  /** Subscribe to SMS marketing (requires a valid phone). */
+  smsConsent?: boolean;
 };
 
 function klaviyoHeaders(apiKey: string): HeadersInit {
@@ -95,8 +99,20 @@ async function upsertProfile(apiKey: string, c: KlaviyoContact): Promise<void> {
   throw new Error(`Klaviyo profile create failed: ${createRes.status} ${text.slice(0, 300)}`);
 }
 
-/** Subscribe the profile to the Master List with email marketing consent. */
-async function subscribeToMasterList(apiKey: string, email: string): Promise<void> {
+/**
+ * Subscribe the profile to the Master List for email and/or SMS marketing.
+ * SMS requires a valid phone; both channels ride on the same profile.
+ */
+async function subscribeToMasterList(apiKey: string, c: KlaviyoContact): Promise<void> {
+  const phone = toE164(c.phone);
+  const subscriptions: Record<string, unknown> = {};
+  if (c.emailConsent) subscriptions.email = { marketing: { consent: 'SUBSCRIBED' } };
+  if (c.smsConsent && phone) subscriptions.sms = { marketing: { consent: 'SUBSCRIBED' } };
+  if (Object.keys(subscriptions).length === 0) return;
+
+  const profile: Record<string, unknown> = { email: c.email, subscriptions };
+  if (phone) profile.phone_number = phone;
+
   const res = await fetch(`${KLAVIYO_BASE}/api/profile-subscription-bulk-create-jobs`, {
     method: 'POST',
     headers: klaviyoHeaders(apiKey),
@@ -105,17 +121,7 @@ async function subscribeToMasterList(apiKey: string, email: string): Promise<voi
         type: 'profile-subscription-bulk-create-job',
         attributes: {
           custom_source: CUSTOM_SOURCE,
-          profiles: {
-            data: [
-              {
-                type: 'profile',
-                attributes: {
-                  email,
-                  subscriptions: { email: { marketing: { consent: 'SUBSCRIBED' } } },
-                },
-              },
-            ],
-          },
+          profiles: { data: [{ type: 'profile', attributes: profile }] },
         },
         relationships: { list: { data: { type: 'list', id: MASTER_LIST_ID } } },
       },
@@ -151,6 +157,7 @@ export async function syncMarketingOptIn(contact: KlaviyoContact): Promise<void>
     console.error('[klaviyo] missing email; skipping marketing sync');
     return;
   }
+  if (!contact.emailConsent && !contact.smsConsent) return;
   await runStep('profile upsert', () => upsertProfile(apiKey, contact));
-  await runStep('Master List subscribe', () => subscribeToMasterList(apiKey, contact.email));
+  await runStep('Master List subscribe', () => subscribeToMasterList(apiKey, contact));
 }

@@ -12,6 +12,7 @@ export default function SignupPage() {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
+  const [smsOptIn, setSmsOptIn] = useState(false);
 
   const handleSubmit = (formData: FormData) => {
     setError(null);
@@ -127,19 +128,6 @@ export default function SignupPage() {
               />
             </div>
             <div className="space-y-1">
-              <label htmlFor="phone" className="text-sm font-medium text-slate-700">
-                Phone <span className="text-slate-400 font-normal">(optional)</span>
-              </label>
-              <input
-                id="phone"
-                name="phone"
-                type="tel"
-                autoComplete="tel"
-                placeholder="+1 555 555 5555"
-                className={inputCls}
-              />
-            </div>
-            <div className="space-y-1">
               <label
                 htmlFor="referralSource"
                 className="text-sm font-medium text-slate-700"
@@ -179,6 +167,79 @@ export default function SignupPage() {
                 Nature. <span className="text-slate-400">I can unsubscribe anytime.</span>
               </span>
             </label>
+
+            <div className="space-y-2">
+              <label
+                htmlFor="smsOptIn"
+                className="flex cursor-pointer items-start gap-2.5 rounded-lg border border-slate-200 bg-slate-50/60 p-3"
+              >
+                <input
+                  id="smsOptIn"
+                  type="checkbox"
+                  checked={smsOptIn}
+                  onChange={(e) => setSmsOptIn(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-[#8dc640]"
+                />
+                <span className="text-sm text-slate-700">Text me exclusive SMS offers</span>
+              </label>
+
+              {smsOptIn && (
+                <div className="space-y-3 rounded-lg border border-slate-200 p-3">
+                  <div className="space-y-1">
+                    <label htmlFor="phone" className="text-sm font-medium text-slate-700">
+                      Mobile phone number
+                    </label>
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      required
+                      autoComplete="tel"
+                      placeholder="+1 555 555 5555"
+                      className={inputCls}
+                    />
+                  </div>
+                  <label htmlFor="smsConsent" className="flex cursor-pointer items-start gap-2">
+                    <input
+                      id="smsConsent"
+                      name="smsConsent"
+                      type="checkbox"
+                      value="true"
+                      required
+                      className="mt-0.5 h-3.5 w-3.5 shrink-0 accent-[#8dc640]"
+                    />
+                    <span className="text-[10px] leading-[1.5] text-slate-500">
+                      By signing up for marketing promotions, you consent to receive marketing text
+                      messages, phone calls, and pre-recorded voice messages from Balance of Nature at
+                      the number provided, including messages and phone calls sent by autodialer.
+                      Consent is not a condition of purchase. Msg &amp; data rates may apply. Msg
+                      frequency varies. Unsubscribe from text/emails at any time by texting STOP or
+                      clicking the unsubscribe link (where available). Unsubscribe from calls and
+                      pre-recorded voice messages by calling Balance of Nature at (877) 412-2526. View
+                      our{' '}
+                      <a
+                        href="https://balanceofnature.com/pages/privacy-policy"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline hover:text-slate-700"
+                      >
+                        Privacy Policy
+                      </a>{' '}
+                      &amp;{' '}
+                      <a
+                        href="https://balanceofnature.com/pages/terms-of-service"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline hover:text-slate-700"
+                      >
+                        Terms
+                      </a>
+                      .
+                    </span>
+                  </label>
+                </div>
+              )}
+            </div>
             {error && (
               <p className="text-xs text-red-600" role="alert">
                 {error}

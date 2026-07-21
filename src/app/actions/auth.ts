@@ -38,6 +38,8 @@ export async function signUp(formData: FormData): Promise<ActionResult> {
   const referralSource = isReferralSourceKey(rawSource) ? rawSource : null;
   // Unchecked checkboxes submit nothing; only an explicit "true" is consent.
   const marketingOptIn = String(formData.get('marketingOptIn') ?? '') === 'true';
+  // SMS consent: the acknowledgement checkbox inside the SMS opt-in section.
+  const smsConsent = String(formData.get('smsConsent') ?? '') === 'true';
 
   if (!firstName) return { ok: false, error: 'First name is required.' };
   if (!lastName) return { ok: false, error: 'Last name is required.' };
@@ -81,6 +83,8 @@ export async function signUp(formData: FormData): Promise<ActionResult> {
             referral_source: referralSource,
             marketing_opt_in: marketingOptIn,
             marketing_opt_in_at: marketingOptIn ? new Date().toISOString() : null,
+            sms_opt_in: smsConsent,
+            sms_opt_in_at: smsConsent ? new Date().toISOString() : null,
           },
           { onConflict: 'user_id' },
         );
@@ -92,13 +96,15 @@ export async function signUp(formData: FormData): Promise<ActionResult> {
   // Mirror the consent to Klaviyo (upsert profile + subscribe to the Master
   // List). Awaited so it completes before the serverless function returns, but
   // it never throws — the durable record is already in Supabase above.
-  if (marketingOptIn) {
+  if (marketingOptIn || smsConsent) {
     await syncMarketingOptIn({
       email,
       firstName,
       lastName,
       phone,
       referralSource: labelForSource(referralSource) || null,
+      emailConsent: marketingOptIn,
+      smsConsent,
     });
   }
 
